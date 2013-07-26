@@ -1,1 +1,2 @@
 git+git://github.com/asterisk/starpy.git
+git+git://github.com/mikelopez/termprint.git
