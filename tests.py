@@ -1,5 +1,9 @@
 from termprint import termprint
 from unittest import TestCase, TestSuite, TextTestRunner
+try:
+    import settings
+except ImportError:
+    sys.exit(1)
 
 
 class TestCallBridges(TestCase):
@@ -18,8 +22,10 @@ class TestCallBridges(TestCase):
   
     def test_settings(self):
         self.assertTrue(getattr(settings, "AMI_USER"))
-        self.assertTrue(getattr(settings, "AMI_HOST"))
-        self.assertTrue(getattr(settings, "HOST"))
+        self.assertTrue(getattr(settings, "AMI_PASS"))
+        self.assertTrue(getattr(settings, "PBX"))
+
+
 
 
 
