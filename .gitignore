@@ -1,0 +1,7 @@
+*.pyc
+*.egg-info
+*DS_*
+*build*
+*dist*
+*.sqlite*
+*local_settings.py*
