@@ -6,9 +6,9 @@ import settings
 class CallBridge:
     """ Base class file for call bridging with starpy """
 
-    host = getattr(settings, "AMI_USER")
-    user = getattr(settings, "AMI_PASS")
-    pwd = getattr(settings, "PBX")
+    user = getattr(settings, "AMI_USER")
+    pwd = getattr(settings, "AMI_PASS")
+    host = getattr(settings, "PBX")
                   
     def __init__(self):
         """ Set the creds """
