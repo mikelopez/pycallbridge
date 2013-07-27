@@ -1,10 +1,8 @@
 from bridge_calls import *
 import settings
 
-
-
-class CallBridge:
-    """ Base class file for call bridging with starpy """
+class OriginateCalls:
+    """ Base class wrapper file for call originating with starpy """
 
     user = getattr(settings, "AMI_USER")
     pwd = getattr(settings, "AMI_PASS")
