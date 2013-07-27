@@ -1,34 +1,39 @@
 from test_base import *
 
-class TestAMICommand(TestAMIBase):
+
+class TestAMICommand():
     """ Demonstrate issuing ami commands """
-    def __init__(self):
-        super(TestAMICommand, self).__init__()
 
     def test_ami_command(self):
         """ Test the connection """
-        h, un, pw = getattr(self, "PBX"), \
-                    getattr(self, "AMI_USER"), \
-                    getattr(self, "AMI_PASS")
+        h, un, pw = getattr(settings, "PBX"), \
+                    getattr(settings, "AMI_USER"), \
+                    getattr(settings, "AMI_PASS")
 
-        def onConnect( ami ):
-            def onResult( result ):
-                print 'Result', result
+        def onConnect(ami):
+            termprint("WARNING", dir(ami))
+            # callbacks for onConnect
+            def onResult(result):
+                termprint("INFO", result)
                 return ami.logoff()
-            def onError( reason ):
-                print reason.getTraceback()
+            def onError(reason):
+                termprint("ERROR", reason.getTraceback())
                 return reason
-            def onFinished( result ):
+            def onFinished(result):
                 reactor.stop()
-            df = ami.command( 'dialplan show from-internal' )
-            df.addCallbacks( onResult, onError )
-            df.addCallbacks( onFinished, onFinished )
+            df = ami.command('dialplan show from-internal')
+            df.addCallbacks(onResult, onError)
+            df.addCallbacks(onFinished, onFinished)
             return df
         session = manager.AMIFactory(un, pw)
-        return session.login(h, 5038).addCallback(onConnect)
+        df = session.login(h, 5038).addCallback(onConnect)
+        if not df:
+            AssertionError(df, exit=True)
+        termprint("INFO", df)
 
 
 if __name__ == '__main__':
-    suite = TestSuite()
-    suite.addTest(TestAMICommand("test_ami_command"))
-    TextTestRunner(verbosity=2).run(suite)
+    # run with reactor
+    cl = TestAMICommand()
+    reactor.callWhenRunning(cl.test_ami_command)
+    reactor.run()

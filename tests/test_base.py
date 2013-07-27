@@ -2,6 +2,8 @@ import sys
 from starpy import manager
 from termprint import termprint
 from unittest import TestCase, TestSuite, TextTestRunner
+from twisted.internet import reactor
+
 sys.path.append('../')
 sys.path.append('../pycallbridge')
 
@@ -10,7 +12,13 @@ try:
 except ImportError:
     termprint("ERROR", "No settings found")
     sys.exit(1)
-from pycallbridge import CallBridge
+
+class AssertionError:
+    # simple assertion error output
+    def __init__(self, msg, exit=False):
+        termprint("ERROR", msg)
+        if exit:
+            sys.exit(1)
 
 class TestAMIBase(TestCase):
     """ Base test class for ami functionality that will be used """
@@ -32,20 +40,17 @@ class TestAMIBase(TestCase):
         termprint("", "\n\n")
 
     def test_settings(self):
-        """ Test the settings """
+        """ Test the settings here """
         self.assertTrue(getattr(settings, "AMI_USER"))
         self.assertTrue(getattr(settings, "AMI_PASS"))
         self.assertTrue(getattr(settings, "PBX"))
         self.break_row()
-    
-
-    
 
 
 if __name__ == '__main__':
     suite = TestSuite()
     suite.addTest(TestAMIBase("test_settings"))
-    suite.addTest(TestCallBridges("test_call_bridge"))
+    suite.addTest(TestAMIBase("test_call_bridge"))
     TextTestRunner(TestAMIBase=2).run(suite)
 
 
