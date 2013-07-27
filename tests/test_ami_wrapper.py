@@ -12,7 +12,8 @@ class TestAMIWrapper(TestAMIBase):
         cl = AMIWrapper(command="dialplan show from-internal")
         self.assertFalse(cl.get_command() == "dialplan show from-internal")
         # allowed kwarg to specify the command to send
-        cl = AMIWrapper(command_txt="dialplan show from-internal")
+        cl = AMIWrapper()
+        cl.set_command("dialplan show from-internal")
         self.assertTrue(cl.get_command() == "dialplan show from-internal")
         
         termprint("INFO", "Running command...")

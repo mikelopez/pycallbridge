@@ -61,7 +61,7 @@ class AMIWrapper:
         """ Get the command to send to AMI (if any) """
         return getattr(self, "command_txt", None)
 
-    def __set_command(self, value):
+    def set_command(self, value):
         """ Set the command text to send over AMI """
         setattr(self, "command_txt", value)
 
@@ -69,7 +69,7 @@ class AMIWrapper:
     def __command(self, cmd_override=None):
         """ Send a command to Asterisk, or fail """
         if cmd_override:
-            self.__set_command(cmd_override)
+            self.set_command(cmd_override)
         if not self.get_command():
             self.__exception(e, "No command to send. set class.command = 'command to send'")
 
