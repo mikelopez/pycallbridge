@@ -1,8 +1,11 @@
 import sys
 from starpy import manager
+from starpy.error import AMICommandFailure
 from termprint import termprint
 from unittest import TestCase, TestSuite, TextTestRunner
 from twisted.internet import reactor
+from nose.tools import ok_, eq_
+import simplejson
 
 sys.path.append('../')
 sys.path.append('../pycallbridge')

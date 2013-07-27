@@ -13,13 +13,19 @@ class OriginateCalls:
         if not self.host or not self.user or not self.pwd:
             raise Exception("No credentials found")
             sys.exit()
-        self.bridge_call()
+    
+    def __session(self):
+        return manager.AMIFactory(self.user, self.pwd)
 
-    def bridge_call(self):
-        """ Bridge the calls """
-        manager.log.setLevel(logging.DEBUG)
-        logging.basicConfig()
-        reactor.callWhenRunning(main)
-        reactor.run()
+    def command(self, cmd):
+        """ Send a command to Asterisk """
+        pass
+
+
+if __name__ == '__main__':
+    #manager.log.setLevel(logging.DEBUG)
+    #logging.basicConfig()
+    reactor.callWhenRunning(main)
+    reactor.run()
 
 

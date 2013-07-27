@@ -1,9 +1,9 @@
 from test_base import *
-
+e, w, i = "ERROR", "WARNING", "INFO"
 
 class TestAMICommand():
     """ Demonstrate issuing ami commands """
-
+    response = ""
     def test_ami_command(self):
         """ Test the connection """
         h, un, pw = getattr(settings, "PBX"), \
@@ -11,13 +11,14 @@ class TestAMICommand():
                     getattr(settings, "AMI_PASS")
 
         def onConnect(ami):
-            termprint("WARNING", dir(ami))
-            # callbacks for onConnect
+            termprint(w, "Connect response\n%s" % dir(ami))
             def onResult(result):
-                termprint("INFO", result)
+                termprint(i, "Result: %s" % result)
+                self.response = result
                 return ami.logoff()
             def onError(reason):
-                termprint("ERROR", reason.getTraceback())
+                termprint(e, reason.getTraceback())
+                reactor.stop()
                 return reason
             def onFinished(result):
                 reactor.stop()
@@ -25,11 +26,22 @@ class TestAMICommand():
             df.addCallbacks(onResult, onError)
             df.addCallbacks(onFinished, onFinished)
             return df
+            
+        def onError(ami):
+            termprint(e, dir(ami))
+            termprint(e, "Stopping Reactor")
+            value = ami.getErrorMessage()
+            self.response = ami.value.message
+            termprint(e, (self.response))
+            termprint(e, "errors = %s" % value)
+            reactor.stop()
+
         session = manager.AMIFactory(un, pw)
-        df = session.login(h, 5038).addCallback(onConnect)
+        df = session.login(h, 5038).addCallbacks(onConnect, onError)
+        
         if not df:
             AssertionError(df, exit=True)
-        termprint("INFO", df)
+        termprint(i, "Login response: \n%s" % dir(df))
 
 
 if __name__ == '__main__':
@@ -37,3 +49,4 @@ if __name__ == '__main__':
     cl = TestAMICommand()
     reactor.callWhenRunning(cl.test_ami_command)
     reactor.run()
+    termprint(i, "response = %s" % cl.response)
