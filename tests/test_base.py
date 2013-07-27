@@ -53,7 +53,6 @@ class TestAMIBase(TestCase):
 if __name__ == '__main__':
     suite = TestSuite()
     suite.addTest(TestAMIBase("test_settings"))
-    suite.addTest(TestAMIBase("test_call_bridge"))
-    TextTestRunner(TestAMIBase=2).run(suite)
+    TextTestRunner(verbosity=2).run(suite)
 
 

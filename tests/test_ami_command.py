@@ -22,25 +22,23 @@ class TestAMICommand():
                 return reason
             def onFinished(result):
                 reactor.stop()
-            df = ami.command('dialplan show from-internal')
-            df.addCallbacks(onResult, onError)
-            df.addCallbacks(onFinished, onFinished)
-            return df
+            dfc = ami.command('dialplan show from-internal')
+            dfc.addCallbacks(onResult, onError)
+            dfc.addCallbacks(onFinished, onFinished)
+            return dfc
             
         def onError(ami):
             termprint(e, dir(ami))
             termprint(e, "Stopping Reactor")
             value = ami.getErrorMessage()
             self.response = ami.value.message
-            termprint(e, (self.response))
             termprint(e, "errors = %s" % value)
             reactor.stop()
 
         session = manager.AMIFactory(un, pw)
         df = session.login(h, 5038).addCallbacks(onConnect, onError)
         
-        if not df:
-            AssertionError(df, exit=True)
+
         termprint(i, "Login response: \n%s" % dir(df))
 
 
