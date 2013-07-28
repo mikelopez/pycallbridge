@@ -6,7 +6,7 @@ import settings
 
 i, e, w = "INFO", "ERROR", "WARNING"
 
-class AMIWrapper:
+class AMIWrapper(object):
     """ Base class wrapper file for call originating with starpy """
 
     user = getattr(settings, "AMI_USER")
@@ -114,7 +114,6 @@ class AMIWrapper:
 
 if __name__ == '__main__':
     #manager.log.setLevel(logging.DEBUG)
-    #logging.basicConfig()
 
     # send a command
     cl = AMIWrapper(command="dialplan show from-internal")

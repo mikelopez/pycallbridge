@@ -8,7 +8,7 @@ from nose.tools import ok_, eq_
 import simplejson
 
 sys.path.append('../')
-sys.path.append('../pycallbridge')
+sys.path.append('../amiwrapper')
 
 try:
     import settings
@@ -43,7 +43,7 @@ class TestAMIBase(TestCase):
         termprint("", "\n\n")
 
     def test_settings(self):
-        """ Test the settings here """
+        """ Test the settings exist here """
         self.assertTrue(getattr(settings, "AMI_USER"))
         self.assertTrue(getattr(settings, "AMI_PASS"))
         self.assertTrue(getattr(settings, "PBX"))

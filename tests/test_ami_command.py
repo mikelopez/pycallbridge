@@ -1,3 +1,7 @@
+"""
+Test AMI commands using strictly starpy and reactor
+
+"""
 from test_base import *
 e, w, i = "ERROR", "WARNING", "INFO"
 

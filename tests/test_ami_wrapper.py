@@ -1,8 +1,9 @@
 from test_base import *
-from pycallbridge import AMIWrapper
+from amiwrapper import AMIWrapper
 
 class TestAMIWrapper(TestAMIBase):
-    """ Test the OriginateCalls class """
+    """ Test the AMIWrapper class """
+    def test_
 
     def test_send_command(self):
         """ Test sending a command to AMI using wrapper.
@@ -20,7 +21,6 @@ class TestAMIWrapper(TestAMIBase):
         cl.command()
         self.assertTrue(cl.response)
         termprint("INFO", "Response: \n%s" % cl.response)
-
 
 if __name__ == '__main__':
     suite = TestSuite()
