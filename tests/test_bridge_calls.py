@@ -11,7 +11,7 @@ sys.path.append('../pycallbridge')
 import settings as s
 
 
-def main(channel = 'sip/kinetic/17863789504', connectTo=('sip/kinetic','17864706212','1')):
+def main(channel = 'sip/kinetic/17863789504', connectTo=('from-internal','17864706212','1')):
 
     f = manager.AMIFactory(getattr(s, "AMI_USER"), getattr(s, "AMI_PASS"))
     df = f.login(getattr(s, "PBX"))
