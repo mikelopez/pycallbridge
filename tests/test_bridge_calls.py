@@ -1,24 +1,27 @@
 """Example script to generate a call to connect a remote channel to an IVR"""
+import sys
+import logging
 from termprint import *
 from starpy import manager
 from twisted.internet import reactor
-import sys, logging
 
-def main(**kwargs):
-    #  channel = 'sip/20035@aci.on.ca', connectTo=('outgoing','s','1') 
-    for k in ['channel', 'connect_to', 'user', 'password', 'host']:
-        if not kwargs.get(k):
-            termprint("ERROR", "Required kwarg %s not present" % k)
-            
-    f = manager.AMIFactory(kwargs.get('user'), kwargs.get('passwd'))
-    df = f.login(kwargs.get('host'))
+
+sys.path.append('../')
+sys.path.append('../pycallbridge')
+import settings as s
+
+
+def main(channel = 'sip/kinetic/17863789504', connectTo=('sip/kinetic','17864706212','1')):
+
+    f = manager.AMIFactory(getattr(s, "AMI_USER"), getattr(s, "AMI_PASS"))
+    df = f.login(getattr(s, "PBX"))
 
     def onLogin( protocol ):
         """On Login, attempt to originate the call"""
-        context, extension, priority = kwargs.get('connect_to')
+        context, extension, priority = connectTo
         df = protocol.originate(
-            kwargs.get('channel'),
-            context,extension,priority,
+            channel,
+            context, extension, priority,
         )
         def onFinished( result ):
             df = protocol.logoff()
@@ -40,3 +43,9 @@ def main(**kwargs):
     df.addCallbacks( onLogin, onFailure )
     return df
 
+
+
+if __name__ == '__main__':
+    manager.log.setLevel(logging.DEBUG)
+    reactor.callWhenRunning(main)
+    reactor.run()

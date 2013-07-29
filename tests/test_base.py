@@ -8,7 +8,7 @@ from nose.tools import ok_, eq_
 import simplejson
 
 sys.path.append('../')
-sys.path.append('../amiwrapper')
+sys.path.append('../pycallbridge')
 
 try:
     import settings
