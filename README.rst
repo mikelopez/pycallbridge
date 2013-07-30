@@ -51,5 +51,5 @@ You can also overwrite the channel, extension, source and context parameters whe
 Response
 ---------
 
-You can see the response of the call bridge by checking ``cl.response`` variable or running cl.get_response()
+You can see the response of the call bridge by checking ``cl.response`` variable or running ``cl.get_response()``
 
