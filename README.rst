@@ -48,4 +48,8 @@ You can also overwrite the channel, extension, source and context parameters whe
 				  extension="7869999999", context="from-internal")
 
 
+Response
+---------
+
+You can see the response of the call bridge by checking ``cl.response`` variable or running cl.get_response()
 
