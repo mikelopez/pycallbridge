@@ -43,8 +43,8 @@ You can also overwrite the channel, extension, source and context parameters whe
 
     from pycallbridge import *
 
-	cl = AMICallBridge(host="x.x.x.x", user="admin", pwd="password123")
-	cl.bridgecalls(channel="sip/outbound", source="3052229999",\
+    cl = AMICallBridge(host="x.x.x.x", user="admin", pwd="password123")
+    cl.bridgecalls(channel="sip/outbound", source="3052229999",\
 				  extension="7869999999", context="from-internal")
 
 
