@@ -30,7 +30,7 @@ Sample usage
 
     args = {'host': host, 'user': user, 'pwd': pwd,\
             'channel': channel, 'source': first_number, \
-            'extension': second_number}
+            'extension': second_number, 'context': "from-internal"}
     cl = AMICallBridge(**args)
     cl.bridgecalls()
     
