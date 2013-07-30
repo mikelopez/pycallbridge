@@ -65,7 +65,7 @@ if __name__ == '__main__':
     first_number = raw_input("\n\nEnter the first number to call")
     second_number = raw_input("\n\nEnter the second number to call")
 
-    args = {'host': host, 'user': user, 'pwd': pwd\
+    args = {'host': host, 'user': user, 'pwd': pwd,\
             'channel': channel, 'source': first_number, \
             'extension': second_number}
     cl = AMICallBridge(**args)
