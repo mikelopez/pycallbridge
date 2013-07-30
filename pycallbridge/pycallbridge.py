@@ -29,13 +29,21 @@ class AMICallBridge(AMIWrapper):
             if k in self.allowed_keys:
                 setattr(self, k, v) 
 
+    def get_channel(self):
+        """ Get the channel. E.g: sip/provider """
+        return getattr(self, "channel", "")
+
+    def set_channel(self, value):
+        """ Set the channel. E.g: sip/provider """
+        setattr(self, "channel", value)
+
     def set_source(self, value):
         """ Set the source phone number 
         E.g: 13059997777
         """
         setattr(self, "source", value)
 
-    def get_source(self, value):
+    def get_source(self):
         """ Get the source to dial. Prepends channel.
         E.g: returns: sip/test-channel/source_number
         """
@@ -48,12 +56,12 @@ class AMICallBridge(AMIWrapper):
         setattr(self, "extension", value)
         return value
 
-    def get_extension(self, value):
+    def get_extension(self):
         """ Get the destination, when doing so prepend asterisk required
         fields. Returns:
         channel, context, extension, priority
         """
-        return getattr(self, "extension", value)
+        return getattr(self, "extension")
 
     def bridgecalls(self):
         # start the reactor 

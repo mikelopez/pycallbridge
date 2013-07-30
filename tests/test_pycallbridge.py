@@ -55,8 +55,11 @@ class TestCallBridge(TestAMIBase):
         cl.set_source(first_number)
         self.assertEquals(cl.get_source(), first_number)
 
-        cl.set_destination(second_number)
-        self.assertEquals(cl.get_destination(), second_number)
+        cl.set_extension(second_number)
+        self.assertEquals(cl.get_extension(), second_number)
+
+        self.assertTrue(cl.response)
+        termprint("WARNING", cl.response)
 
 
 if __name__ == '__main__':
