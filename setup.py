@@ -5,7 +5,7 @@ setup(name='pycallbridge',
       description='Description for pycallbridge',
       author='',
       license='MIT',
-      py_modules=['pycallbridge'],
+      py_modules=['pycallbridge.pycallbridge'],
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Console',
