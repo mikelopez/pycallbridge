@@ -1,35 +1,64 @@
 from test_base import *
 from amiwrapper import *
-from pycallbridge.pycallbridge import *
+sys.path.append("../")
+sys.path.append("../pycallbridge")
+try:
+    import settings
+    host = getattr(settings, "PBX")
+    user = getattr(settings, "AMI_USER")
+    pwd = getattr(settings, "AMI_PASS")
+    channel = getattr(settings, "SIP_CHANNEL")
 
-command = "dialplan show from-internal"
+except ImportError:
+    host, user, pwd, channel = "", "", "", ""
+    settings = False
+    termprint("ERROR", "Please set the following variables in local_settings.py")
+    termprint("ERROR", "\t- AMI_USER")
+    termprint("ERROR", "\t- AMI_PASS")
+    termprint("ERROR", "\t- PBX")
+    termprint("ERROR", "\t- SIP_CHANNEL")
+    sys.exit(1)
 
-class TestAMICommand(TestAMIBase):
+
+class TestCallBridge(TestAMIBase):
     """ Test the AMIWrapper class """
+    def test_bridge_calls_params(self):
+        """ Test the bridging of calls with parameters in the
+        class instance 
+        """
+        first_number = raw_input("\n\nEnter the first number to call")
+        second_number = raw_input("\n\nEnter the second number to call")
 
-    def test_send_command(self):
+        args = {'host': host, 'user': user, 'pwd': pwd\
+                'channel': channel, 'source': first_number, \
+                'extension': second_number}
+        cl = AMICallBridge(**args)
+        cl.bridgecalls()
+        # some kind of response
+        self.assertTrue(cl.response)
+        termprint("WARNING", cl.response)
+
+
+    def test_bridge_calls(self):
         """ Test sending a command to AMI using wrapper.
         It should only allow allowed_keys as kwargs.
         Additionally tests get/set command
         """
-        # "command" kwarg is not in allowed keys
-        cl = AMICommand(command=command)
-        self.assertFalse(cl.get_command() == command)
-        # allowed key
-        cl = AMICommand(command_txt=command)
-        self.assertTrue(cl.get_command() == command)
+        first_number = raw_input("\n\nEnter the first number to call")
+        second_number = raw_input("\n\nEnter the second number to call")
+        
+        cl = AMICallBridge(host=host, user=user, pwd=pwd)
+        cl.set_channel(channel)
+        self.assertEquals(cl.get_channel(), channel)
 
-        # allowed kwarg to specify the command to send
-        cl = AMICommand()
-        cl.set_command(command)
-        self.assertTrue(cl.get_command() == command)
+        cl.set_source(first_number)
+        self.assertEquals(cl.get_source(), first_number)
 
-        termprint("INFO", "Running the command on Asterisk...")
-        cl.command()
-        self.assertTrue(cl.response)
-        termprint("INFO", "Response: \n%s" % cl.response)
+        cl.set_destination(second_number)
+        self.assertEquals(cl.get_destination(), second_number)
+
 
 if __name__ == '__main__':
     suite = TestSuite()
-    suite.addTest(TestAMICommand("test_send_command"))
+    suite.addTest(TestCallBridge("test_bridge_calls"))
     TextTestRunner(verbosity=2).run(suite)

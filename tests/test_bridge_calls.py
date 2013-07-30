@@ -11,7 +11,7 @@ sys.path.append('../pycallbridge')
 import settings as s
 
 
-def main(channel = 'sip/kinetic/17864445555', connectTo=('from-internal','3051112222','1')):
+def main(channel='sip/kinetic/17864445555', connectTo=('from-internal','3051112222','1')):
 
     f = manager.AMIFactory(getattr(s, "AMI_USER"), getattr(s, "AMI_PASS"))
     df = f.login(getattr(s, "PBX"))
@@ -20,8 +20,7 @@ def main(channel = 'sip/kinetic/17864445555', connectTo=('from-internal','305111
         """On Login, attempt to originate the call"""
         context, extension, priority = connectTo
         df = protocol.originate(
-            channel,
-            context, extension, priority,
+            channel, context, extension, priority,
         )
         def onFinished( result ):
             termprint("INFO", result)
