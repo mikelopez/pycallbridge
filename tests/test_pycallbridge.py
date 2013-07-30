@@ -9,35 +9,60 @@ try:
     user = getattr(settings, "AMI_USER")
     pwd = getattr(settings, "AMI_PASS")
     channel = getattr(settings, "SIP_CHANNEL")
+    test_source = getattr(settings, "TEST_SOURCE_NUMBER")
+    test_extension = getattr(settings, "TEST_EXTENSION_NUMBER")
+
 
 except ImportError:
     host, user, pwd, channel = "", "", "", ""
+    test_source = ""
+    test_extension = ""
     settings = False
     termprint("ERROR", "Please set the following variables in local_settings.py")
     termprint("ERROR", "\t- AMI_USER")
     termprint("ERROR", "\t- AMI_PASS")
     termprint("ERROR", "\t- PBX")
     termprint("ERROR", "\t- SIP_CHANNEL")
+    termprint("ERROR", "\t- TEST_SOURCE_NUMBER")
+    termprint("ERROR", "\t- TEST_SOURCE_NUMBER")
     sys.exit(1)
 
 
 class TestCallBridge(TestAMIBase):
     """ Test the AMIWrapper class """
+    test_source = test_source
+    test_extension = test_extension
+
     def test_bridge_calls_params(self):
         """ Test the bridging of calls with parameters in the
         class instance 
         """
-        first_number = raw_input("\n\nEnter the first number to call")
-        second_number = raw_input("\n\nEnter the second number to call")
+        if not self.test_source:
+            self.test_source = raw_input("\n\nEnter the first number to call")
+        if not self.test_extension:
+            self.test_extension = raw_input("\n\nEnter the second number to call")
 
         args = {'host': host, 'user': user, 'pwd': pwd,\
-                'channel': channel, 'source': first_number, \
-                'extension': second_number}
+                'channel': channel, 'source': self.test_source, \
+                'extension': self.test_extension}
         cl = AMICallBridge(**args)
+        self.assertEquals(cl.host, host)
+        self.assertEquals(cl.user, user)
+        self.assertEquals(cl.pwd, pwd)
+        self.assertEquals(cl.channel, channel)
+        self.assertEquals(cl.source, self.test_source)
+        self.assertEquals(cl.extension, self.test_extension)
+        self.assertEquals(cl.get_channel(), channel)
+        self.assertEquals(cl.get_source(), self.test_source)
+        self.assertEquals(cl.get_extension(), self.test_extension)
+
         cl.bridgecalls()
         # some kind of response
-        self.assertTrue(cl.response)
-        termprint("WARNING", cl.response)
+        if not cl.response:
+            termprint("ERROR", "\nNo response, not functioning or incorrect information")
+            termprint("WARNING", cl.__dict__)
+        else:
+            termprint("WARNING", cl.response)
 
 
     def test_bridge_calls(self):
@@ -45,24 +70,30 @@ class TestCallBridge(TestAMIBase):
         It should only allow allowed_keys as kwargs.
         Additionally tests get/set command
         """
-        first_number = raw_input("\n\nEnter the first number to call")
-        second_number = raw_input("\n\nEnter the second number to call")
+        if not self.test_source:
+            self.test_source = raw_input("\n\nEnter the first number to call")
+        if not self.test_extension:
+            self.test_extension = raw_input("\n\nEnter the second number to call")
         
         cl = AMICallBridge(host=host, user=user, pwd=pwd)
         cl.set_channel(channel)
         self.assertEquals(cl.get_channel(), channel)
 
-        cl.set_source(first_number)
-        self.assertEquals(cl.get_source(), first_number)
+        cl.set_source(self.test_source)
+        self.assertEquals(cl.get_source(), self.test_source)
 
-        cl.set_extension(second_number)
-        self.assertEquals(cl.get_extension(), second_number)
+        cl.set_extension(self.test_extension)
+        self.assertEquals(cl.get_extension(), self.test_extension)
 
-        self.assertTrue(cl.response)
-        termprint("WARNING", cl.response)
+        if not cl.response:
+            termprint("ERROR", "\nNo response, not functioning or incorrect information")
+            termprint("WARNING", cl.__dict__)
+        else:
+            termprint("WARNING", cl.response)
 
 
 if __name__ == '__main__':
     suite = TestSuite()
+    suite.addTest(TestCallBridge("test_bridge_calls_params"))
     suite.addTest(TestCallBridge("test_bridge_calls"))
     TextTestRunner(verbosity=2).run(suite)

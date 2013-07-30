@@ -21,6 +21,8 @@ class AMICallBridge(AMIWrapper):
     extension = ""
     context = ""
     priority = "1"
+    allowed_keys = ['user', 'host', 'pwd', 'channel', 'source', \
+                    'extension', 'context', 'priority' ]
 
     def __init__(self, **kwargs):
         # overwrite defaults frm any kwargs
