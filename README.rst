@@ -26,10 +26,11 @@ Sample usage
 
 .. code-block:: python
 
-	args = {'host': host, 'user': user, 'pwd': pwd,\
+    from pycallbridge import *
+
+    args = {'host': host, 'user': user, 'pwd': pwd,\
             'channel': channel, 'source': first_number, \
             'extension': second_number}
-
     cl = AMICallBridge(**args)
     cl.bridgecalls()
     
@@ -39,6 +40,8 @@ Secondary Usage
 You can also overwrite the channel, extension, source and context parameters when calling bridgecalls() as well.
 
 .. code-block:: python
+
+    from pycallbridge import *
 
 	cl = AMICallBridge(host="x.x.x.x", user="admin", pwd="password123")
 	cl.bridgecalls(channel="sip/outbound", source="3052229999",\
