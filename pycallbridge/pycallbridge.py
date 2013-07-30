@@ -56,19 +56,73 @@ class AMICallBridge(AMIWrapper):
         called and bridged. Example Format: 13059991111 
         """
         setattr(self, "extension", value)
-        return value
 
     def get_extension(self):
         """ Get the destination, when doing so prepend asterisk required
-        fields. Returns:
-        channel, context, extension, priority
+        fields. Returns extension
         """
         return getattr(self, "extension")
 
+    def set_context(self, value):
+        """ Set the context name """
+        setattr(self, "context", value)
+
+    def get_context(self):
+        """ Get the context, when doing so prepend asterisk 
+        required fields
+        """
+        return getattr(self, "context")
+
+    def set_priority(self, value):
+        """ Set the priority for the destination extension  """
+        setattr(self, "priority", value)
+
+    def get_priority(self):
+        """ Get the priority for the destination extension """
+        return getattr(self, "priority")
+
     def bridgecalls(self):
         # start the reactor 
-        # self.run_reactor(self.__command)
-        pass
+        self.run_reactor(self.__bridgecalls)
+
+    def __bridgecalls(self):
+        """ First call source number, then bridge in extension """
+        def on_connect( protocol ):
+            """On Login, attempt to originate the call"""
+            df = protocol.originate(
+                "%s/%s" % (self.get_channel(), self.get_source()), 
+                self.get_context(), 
+                self.get_extension(), 
+                self.get_priority()
+            )
+            def on_complete( result ):
+                termprint("INFO", result)
+                df = protocol.logoff()
+                def on_logoff( result ):
+                    # stop safely
+                    self.stop_reactor()
+                return df.addCallbacks( on_logoff, on_logoff )
+
+            def on_failure( reason ):
+                print reason.getTraceback()
+                return reason 
+
+            df.addErrback( on_failure )
+            df.addCallbacks( on_complete, on_complete )
+            return df 
+
+        def on_error( reason ):
+            """Unable to log in!"""
+            self.response = reason
+            self.exception(reason.getTraceback())
+
+        df = self.set_session().login(self.host, 5038).addCallbacks(on_connect, on_error)
+        if not self.session:
+            self.exception("Failed to set the session")
+        if not df:
+            self.exception(df)
+        return df
+
 
 
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ try:
     channel = getattr(settings, "SIP_CHANNEL")
     test_source = getattr(settings, "TEST_SOURCE_NUMBER")
     test_extension = getattr(settings, "TEST_EXTENSION_NUMBER")
+    tes_context = getattr(settings, "TEST_CONTEXT")
 
 
 except ImportError:
@@ -32,6 +33,7 @@ class TestCallBridge(TestAMIBase):
     """ Test the AMIWrapper class """
     test_source = test_source
     test_extension = test_extension
+    test_context = "from-internal"
 
     def test_bridge_calls_params(self):
         """ Test the bridging of calls with parameters in the
@@ -44,7 +46,7 @@ class TestCallBridge(TestAMIBase):
 
         args = {'host': host, 'user': user, 'pwd': pwd,\
                 'channel': channel, 'source': self.test_source, \
-                'extension': self.test_extension}
+                'extension': self.test_extension, 'context': self.test_context}
         cl = AMICallBridge(**args)
         self.assertEquals(cl.host, host)
         self.assertEquals(cl.user, user)
@@ -52,11 +54,20 @@ class TestCallBridge(TestAMIBase):
         self.assertEquals(cl.channel, channel)
         self.assertEquals(cl.source, self.test_source)
         self.assertEquals(cl.extension, self.test_extension)
+        self.assertEquals(cl.context, self.test_context)
         self.assertEquals(cl.get_channel(), channel)
         self.assertEquals(cl.get_source(), self.test_source)
         self.assertEquals(cl.get_extension(), self.test_extension)
+        self.assertEquals(cl.get_context(), self.test_context)
 
-        cl.bridgecalls()
+        # bridgecalls can overwrite the params too
+        cl.bridgecalls(channel="sip/overwrite/1234567", source="111111", \
+                        extension="222222", context="from-internal")
+        self.assertEquals(cl.get_channel(), "sip/overwrite/1234567")
+        self.assertEquals(cl.get_source(), "111111")
+        self.assertEquals(cl.get_extension(), "222222")
+        self.assertEquals(cl.get_context(), "from-internal")
+
         # some kind of response
         if not cl.response:
             termprint("ERROR", "\nNo response, not functioning or incorrect information")
@@ -84,6 +95,9 @@ class TestCallBridge(TestAMIBase):
 
         cl.set_extension(self.test_extension)
         self.assertEquals(cl.get_extension(), self.test_extension)
+
+        cl.set_context(self.test_context)
+        self.assertEquals(cl.get_context(), cl.context)
 
         if not cl.response:
             termprint("ERROR", "\nNo response, not functioning or incorrect information")
