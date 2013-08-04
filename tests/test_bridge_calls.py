@@ -4,26 +4,32 @@ import logging
 from termprint import *
 from starpy import manager
 from twisted.internet import reactor
-
+from random import randint
 
 sys.path.append('../')
 sys.path.append('../pycallbridge')
+
 import settings as s
+test_source = getattr(settings, "TEST_SOURCE_NUMBER", "7864445555")
+test_exten = getattr(settings, "TEST_EXTENSION_NUMBER", "7864445555")
+test_context = getattr(settings, "TEST_CONTEXT", "from-internal")
 
 
-def main(channel='sip/kinetic/17864445555', connectTo=('from-internal','3051112222','1')):
+def main(channel='sip/kinetic/%s' % (test_source), connectTo=('from-internal','%s' % (test_exten),'1')):
 
     f = manager.AMIFactory(getattr(s, "AMI_USER"), getattr(s, "AMI_PASS"))
     df = f.login(getattr(s, "PBX"))
 
     def onLogin( protocol ):
         """On Login, attempt to originate the call"""
+        acctid = "XXXX%s" % str(randint(11111,999999))
         context, extension, priority = connectTo
         df = protocol.originate(
-            channel, context, extension, priority,
+            channel, context, extension, priority, callerid="ABC123XY456", account=acctid
         )
         def onFinished( result ):
-            termprint("INFO", result)
+            termprint("INFO", "FINISHED CALL \n\t%s" % result)
+            termprint("ERROR", dir(result))
             df = protocol.logoff()
             def onLogoff( result ):
                 reactor.stop()

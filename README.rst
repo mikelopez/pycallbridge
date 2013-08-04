@@ -6,8 +6,7 @@ Readme for pycallbridge
 
 Sample Settings
 ----------------
-Add the following to settings if you are running tests
-
+Add the following to settings if you are running the tests
 
 .. code-block:: python
 
@@ -38,6 +37,9 @@ Sample usage
 Secondary Usage
 ---------------
 You can also overwrite the channel, extension, source and context parameters when calling bridgecalls() as well.
+Note, the source is the number called first, the extension is the second number that is called. The first number
+will experience hearing some ringing tones until the other line is answered, the second user experiences no wait
+
 
 .. code-block:: python
 
