@@ -10,19 +10,22 @@ Add the following to settings if you are running the tests
 
 .. code-block:: python
 
-	AMI_USER = "admin-user"
-	AMI_PASS = "password"
-	PBX = "x.x.x.x"
+    AMI_USER = "admin-user"
+    AMI_PASS = "password"
+    PBX = "x.x.x.x"
 
-	SIP_CHANNEL = "sip/provider"
-    
+    SIP_CHANNEL = "sip/provider"
+
     TEST_CONTEXT = "from-internal"    
-	TEST_SOURCE_NUMBER = '13051239999'
-	TEST_EXTESION_NUMBER = '3051119999'
+    TEST_SOURCE_NUMBER = '13051239999'
+    TEST_EXTESION_NUMBER = '3051119999'
 
 
 Sample usage
 -------------
+You can pass all the required keyword arguments when instantiating the class as shown below, or you can
+provide the bare essentials to connect, and later pass them in the method that directly calls the 
+call bridging action (See Secondary Usage below)
 
 .. code-block:: python
 
