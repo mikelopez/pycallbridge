@@ -10,9 +10,9 @@ sys.path.append('../')
 sys.path.append('../pycallbridge')
 
 import settings as s
-test_source = getattr(settings, "TEST_SOURCE_NUMBER", "7864445555")
-test_exten = getattr(settings, "TEST_EXTENSION_NUMBER", "7864445555")
-test_context = getattr(settings, "TEST_CONTEXT", "from-internal")
+test_source = getattr(s, "TEST_SOURCE_NUMBER", "7864445555")
+test_exten = getattr(s, "TEST_EXTENSION_NUMBER", "7864445555")
+test_context = getattr(s, "TEST_CONTEXT", "from-internal")
 
 
 def main(channel='sip/kinetic/%s' % (test_source), connectTo=('from-internal','%s' % (test_exten),'1')):
