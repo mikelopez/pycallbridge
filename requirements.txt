@@ -3,3 +3,4 @@ git+git://github.com/mikelopez/amiwrapper.git
 git+git://github.com/mikelopez/termprint.git
 termcolor
 nose
+twisted
