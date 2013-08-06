@@ -63,11 +63,12 @@ class TestCallBridge(TestAMIBase):
         self.assertEquals(cl.get_context(), self.test_context)
 
         # bridgecalls can overwrite the params too
-        cl.bridgecalls()
+        result = cl.bridgecalls()
         self.assertEquals(cl.get_channel(), channel)
         self.assertEquals(cl.get_source(), test_source)
         self.assertEquals(cl.get_extension(), test_extension)
         self.assertEquals(cl.get_context(), test_context)
+        termprint("INFO", "RESULT:\n%s\n\n" % result)
 
         # some kind of response
         if not cl.response:
