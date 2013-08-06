@@ -21,6 +21,7 @@ class AMICallBridge(AMIWrapper):
     extension = ""
     context = ""
     priority = "1"
+    call_result = ""
     allowed_keys = ['user', 'host', 'pwd', 'channel', 'source', \
                     'extension', 'context', 'priority', 'account' ]
 
@@ -96,6 +97,7 @@ class AMICallBridge(AMIWrapper):
 
     def __bridgecalls(self):
         """ First call source number, then bridge in extension """
+        return_result = ""
         def on_connect( protocol ):
             """On Login, attempt to originate the call"""
             df = protocol.originate(
@@ -106,6 +108,8 @@ class AMICallBridge(AMIWrapper):
             )
             def on_complete( result ):
                 termprint("INFO", result)
+                return_result = result
+                self.call_result = result
                 df = protocol.logoff()
                 def on_logoff( result ):
                     # stop safely
@@ -130,7 +134,8 @@ class AMICallBridge(AMIWrapper):
             self.exception("Failed to set the session")
         if not df:
             self.exception(df)
-        return df
+        #return df
+        return return_result
 
 
 
