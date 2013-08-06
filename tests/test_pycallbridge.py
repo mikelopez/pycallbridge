@@ -15,6 +15,7 @@ try:
 
 
 except ImportError:
+    termprint("ERROR", "Not using settings authentication")
     host, user, pwd, channel = "", "", "", ""
     test_source = ""
     test_extension = ""
