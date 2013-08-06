@@ -11,7 +11,7 @@ try:
     channel = getattr(settings, "SIP_CHANNEL")
     test_source = getattr(settings, "TEST_SOURCE_NUMBER")
     test_extension = getattr(settings, "TEST_EXTENSION_NUMBER")
-    tes_context = getattr(settings, "TEST_CONTEXT")
+    test_context = getattr(settings, "TEST_CONTEXT", "from-internal")
 
 
 except ImportError:
@@ -19,6 +19,7 @@ except ImportError:
     host, user, pwd, channel = "", "", "", ""
     test_source = ""
     test_extension = ""
+    test_context = "from-internal"
     settings = False
     termprint("ERROR", "Please set the following variables in local_settings.py")
     termprint("ERROR", "\t- AMI_USER")
@@ -62,12 +63,11 @@ class TestCallBridge(TestAMIBase):
         self.assertEquals(cl.get_context(), self.test_context)
 
         # bridgecalls can overwrite the params too
-        cl.bridgecalls(channel="sip/overwrite/1234567", source="111111", \
-                        extension="222222", context="from-internal")
-        self.assertEquals(cl.get_channel(), "sip/overwrite/1234567")
-        self.assertEquals(cl.get_source(), "111111")
-        self.assertEquals(cl.get_extension(), "222222")
-        self.assertEquals(cl.get_context(), "from-internal")
+        cl.bridgecalls()
+        self.assertEquals(cl.get_channel(), channel)
+        self.assertEquals(cl.get_source(), test_source)
+        self.assertEquals(cl.get_extension(), test_extension)
+        self.assertEquals(cl.get_context(), test_context)
 
         # some kind of response
         if not cl.response:
