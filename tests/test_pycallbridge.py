@@ -87,7 +87,11 @@ class TestCallBridge(TestAMIBase):
         if not self.test_extension:
             self.test_extension = raw_input("\n\nEnter the second number to call")
         
-        cl = AMICallBridge(host=host, user=user, pwd=pwd)
+        args = {'host': host, 'user': user, 'pwd': pwd,\
+                'channel': channel, 'source': self.test_source, \
+                'extension': self.test_extension, 'context': self.test_context}
+        #cl = AMICallBridge(host=host, user=user, pwd=pwd)
+        cl = AMICallBridge(**args)
         cl.set_channel(channel)
         self.assertEquals(cl.get_channel(), channel)
 
