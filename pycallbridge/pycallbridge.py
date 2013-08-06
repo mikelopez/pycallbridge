@@ -81,8 +81,13 @@ class AMICallBridge(AMIWrapper):
         """ Get the priority for the destination extension """
         return getattr(self, "priority")
 
-    def bridgecalls(self):
-        # start the reactor 
+    def bridgecalls(self, *args, **kwargs):
+        # start the reactor - overwrite kwargs
+        for k, v in kwargs.items():
+            try:
+                setattr(self, k, v)
+            except:
+                pass
         self.run_reactor(self.__bridgecalls)
 
     def __bridgecalls(self):
