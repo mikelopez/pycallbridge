@@ -18,7 +18,7 @@ Add the following to settings if you are running the tests
 
     TEST_CONTEXT = "from-internal"    
     TEST_SOURCE_NUMBER = '13051239999'
-    TEST_EXTESION_NUMBER = '3051119999'
+    TEST_EXTENSION_NUMBER = '3051119999'
 
 
 Sample usage
