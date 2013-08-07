@@ -91,9 +91,8 @@ class AMICallBridge(AMIWrapper):
                 pass
         try:
             self.run_reactor(self.__bridgecalls)
-            return True
         except Exception, e:
-            raise Exception('e')
+            raise Exception(e)
 
     def __bridgecalls(self):
         """ First call source number, then bridge in extension """
