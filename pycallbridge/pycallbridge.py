@@ -30,7 +30,6 @@ class AMICallBridge(AMIWrapper):
     def __init__(self, **kwargs):
         # overwrite defaults frm any kwargs
         super(AMICallBridge, self).__init__(**kwargs)
-        debug = debug
         for k, v in kwargs.items():
             if k in self.allowed_keys:
                 setattr(self, k, v) 
