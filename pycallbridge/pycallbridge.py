@@ -6,8 +6,10 @@ try:
     pwd = getattr(settings, "AMI_PASS")
     host = getattr(settings, "PBX")
     channel = getattr(settings, "SIP_CHANNEL")
+    debug = getattr(settings, "DEBUG", False)
 except ImportError:
     user, pwd, host, channel = "", "", "", ""
+    debug = True
 
 i, e, w = "INFO", "ERROR", "WARNING"
 
@@ -28,6 +30,7 @@ class AMICallBridge(AMIWrapper):
     def __init__(self, **kwargs):
         # overwrite defaults frm any kwargs
         super(AMICallBridge, self).__init__(**kwargs)
+        debug = debug
         for k, v in kwargs.items():
             if k in self.allowed_keys:
                 setattr(self, k, v) 
@@ -90,8 +93,10 @@ class AMICallBridge(AMIWrapper):
             except:
                 pass
         try:
+            self.info_log("pycallbridge - bridgecalls() :: Running reactor")
             self.run_reactor(self.__bridgecalls)
         except Exception, e:
+            self.error_log("pycallbridge - bridgecalls() :: Run reactor failed\n%s"%e)
             raise Exception(e)
 
     def __bridgecalls(self):
@@ -106,18 +111,20 @@ class AMICallBridge(AMIWrapper):
                 self.get_priority()
             )
             def on_complete( result ):
-                termprint("INFO", result)
+                self.info_log("pycallbridge - on_complete() :: %s" % result)
                 return_result = result
                 self.call_result = result
                 df = protocol.logoff()
                 def on_logoff( result ):
                     # stop safely
+                    self.info_log("pycallbridge - on_complete() - Stopping reactor")
                     self.stop_reactor()
                 return df.addCallbacks( on_logoff, on_logoff )
 
             def on_failure( reason ):
-                termprint("ERROR", reason.getTraceback())
-                termprint("ERROR", reason)
+                self.error_log("pycallbridge - on_failure() :: %s" % reason.getTraceback())
+                self.error_log("pycallbridge - on_failure() :: %s" % reason)
+                self.error_log("pycallbridge - on_failure() :: Stopping reactor")
                 self.stop_reactor()
                 return reason
 
