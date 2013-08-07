@@ -117,8 +117,10 @@ class AMICallBridge(AMIWrapper):
                 return df.addCallbacks( on_logoff, on_logoff )
 
             def on_failure( reason ):
-                print reason.getTraceback()
-                return reason 
+                termprint("ERROR", reason.getTraceback())
+                termprint("ERROR", reason)
+                self.stop_reactor()
+                return reason
 
             df.addErrback( on_failure )
             df.addCallbacks( on_complete, on_complete )

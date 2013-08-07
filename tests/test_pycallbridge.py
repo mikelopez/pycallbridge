@@ -3,6 +3,7 @@ from amiwrapper import *
 sys.path.append("../")
 sys.path.append("../pycallbridge")
 from pycallbridge import *
+
 try:
     import settings
     host = getattr(settings, "PBX")
