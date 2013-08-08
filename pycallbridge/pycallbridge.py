@@ -125,7 +125,7 @@ class AMICallBridge(AMIWrapper):
                 self.error_log("pycallbridge - on_failure() :: Stopping reactor")
                 df = protocol.logoff()
                 self.stop_reactor()
-                return reason
+                return reason.getTraceback()
 
             df.addErrback( on_failure )
             df.addCallbacks( on_complete, on_complete )
@@ -133,16 +133,21 @@ class AMICallBridge(AMIWrapper):
 
         def on_error( reason ):
             """Unable to log in!"""
-            self.response = reason
-            self.exception(reason.getTraceback())
+            self.response = dir(reason)
+            print "Authentication Error"
+            self.stop_reactor()
+            self.error_log(reason)
+            self.error_log(reason.getTraceback())
 
-        df = self.set_session().login(self.host, 5038).addCallbacks(on_connect, on_error)
+        try:
+            df = self.set_session().login(self.host, 5038).addCallbacks(on_connect, on_error)
+        except Exception, e:
+            return e
         if not self.session:
             self.exception("Failed to set the session")
         if not df:
             self.exception(df)
-        #return df
-        return return_result
+        return self.call_result
 
 
 

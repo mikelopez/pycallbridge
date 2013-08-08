@@ -1,4 +1,5 @@
 import sys
+import os
 from starpy import manager
 from starpy.error import AMICommandFailure
 from termprint import termprint
@@ -6,6 +7,8 @@ from unittest import TestCase, TestSuite, TextTestRunner
 from twisted.internet import reactor
 from nose.tools import ok_, eq_
 import simplejson
+
+PATH_APPEND = os.path.realpath(os.path.dirname(__file__))
 
 sys.path.append('../')
 sys.path.append('../pycallbridge')

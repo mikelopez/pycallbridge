@@ -1,11 +1,8 @@
 from test_base import *
 from amiwrapper import *
-sys.path.append("../")
-sys.path.append("../pycallbridge")
 from pycallbridge import *
 
 try:
-    import settings
     host = getattr(settings, "PBX")
     user = getattr(settings, "AMI_USER")
     pwd = getattr(settings, "AMI_PASS")
