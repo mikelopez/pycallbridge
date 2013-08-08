@@ -111,7 +111,6 @@ class AMICallBridge(AMIWrapper):
             )
             def on_complete( result ):
                 self.info_log("pycallbridge - on_complete() :: %s" % result)
-                return_result = result
                 self.call_result = result
                 df = protocol.logoff()
                 def on_logoff( result ):
@@ -124,6 +123,7 @@ class AMICallBridge(AMIWrapper):
                 self.error_log("pycallbridge - on_failure() :: %s" % reason.getTraceback())
                 self.error_log("pycallbridge - on_failure() :: %s" % reason)
                 self.error_log("pycallbridge - on_failure() :: Stopping reactor")
+                df = protocol.logoff()
                 self.stop_reactor()
                 return reason
 
