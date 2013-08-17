@@ -34,10 +34,6 @@ class AMICallBridge(AMIWrapper):
             if k in self.allowed_keys:
                 setattr(self, k, v) 
 
-    def get_channel(self):
-        """ Get the channel. E.g: sip/provider """
-        return getattr(self, "channel", "")
-
     def set_channel(self, value):
         """ Set the channel. E.g: sip/provider """
         setattr(self, "channel", value)
@@ -48,17 +44,25 @@ class AMICallBridge(AMIWrapper):
         """
         setattr(self, "source", value)
 
-    def get_source(self):
-        """ Get the source to dial. Prepends channel.
-        E.g: returns: sip/test-channel/source_number
-        """
-        return getattr(self, "source")
-
     def set_extension(self, value):
         """ Set the destination number - the second number that is 
         called and bridged. Example Format: 13059991111 
         """
         setattr(self, "extension", value)
+
+    def set_context(self, value):
+        """ Set the context name """
+        setattr(self, "context", value)
+
+    def set_priority(self, value):
+        """ Set the priority for the destination extension  """
+        setattr(self, "priority", value)
+
+    def get_source(self):
+        """ Get the source to dial. Prepends channel.
+        E.g: returns: sip/test-channel/source_number
+        """
+        return getattr(self, "source")
 
     def get_extension(self):
         """ Get the destination, when doing so prepend asterisk required
@@ -66,23 +70,19 @@ class AMICallBridge(AMIWrapper):
         """
         return getattr(self, "extension")
 
-    def set_context(self, value):
-        """ Set the context name """
-        setattr(self, "context", value)
-
     def get_context(self):
         """ Get the context, when doing so prepend asterisk 
         required fields
         """
         return getattr(self, "context")
 
-    def set_priority(self, value):
-        """ Set the priority for the destination extension  """
-        setattr(self, "priority", value)
-
     def get_priority(self):
         """ Get the priority for the destination extension """
         return getattr(self, "priority")
+
+    def get_channel(self):
+        """ Get the channel. E.g: sip/provider """
+        return getattr(self, "channel", "")
 
     def bridgecalls(self, *args, **kwargs):
         # start the reactor - overwrite kwargs
